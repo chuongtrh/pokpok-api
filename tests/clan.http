@@ -1,0 +1,35 @@
+###
+GET http://localhost:5200
+
+###
+GET http://localhost:5200/api/clan
+
+
+###
+GET http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN
+
+
+###
+GET http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/member
+
+
+
+###
+POST http://localhost:5200/api/clan
+Content-Type: application/json
+
+{
+    "code":"clan_01",
+    "name":"clan 01"
+}
+
+
+
+###
+POST http://localhost:5200/api/clan/6mkjJkKT3K1UYMFvWyxa/member
+Content-Type: application/json
+
+{
+    "code":"aaa",
+    "name":"aaa"
+}

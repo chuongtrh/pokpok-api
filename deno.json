@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.174.0/"
+  },
+  "tasks": {
+    "dev": "DENO_ENV=local denon run -A main.ts",
+    "format": "deno fmt"
+  }
+}

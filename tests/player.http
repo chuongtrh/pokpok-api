@@ -1,0 +1,16 @@
+
+### get player
+GET  http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game/b1GGQH4U37dXTJykzl1U/player
+
+
+### add player
+POST  http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game/b1GGQH4U37dXTJykzl1U/player
+Content-Type: application/json
+
+{
+    "players":[{
+        "id":"XdgLtQD0FUsgpxXcMRyQ",
+        "name":"bbb"
+    }]
+}
+
