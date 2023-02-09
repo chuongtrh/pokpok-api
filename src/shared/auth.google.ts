@@ -6,6 +6,5 @@ export const getProfileFromCredential = (credential: string) => {
     return Buffer.from(base64, "base64").toString("binary");
   };
   const payload = JSON.parse(atob(tokens[1]));
-  console.log("🚀 ~ payload", payload);
   return payload;
 };

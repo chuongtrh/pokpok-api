@@ -1,8 +1,10 @@
+// deno-lint-ignore-file
+import { Status } from "https://deno.land/x/oak@v11.1.0/mod.ts";
+
 import { getProfileFromCredential } from "../shared/auth.google.ts";
 
 import repository from "../repositories/index.ts";
-import constants from "../shared/constants.ts";
-import utils from "../shared/utils.ts";
+import jwt from "../shared/jwt.ts";
 
 export default {
   loginWithGoogle: async (ctx: any) => {
@@ -11,9 +13,14 @@ export default {
     if (email && email_verified) {
       const user = await repository.user.getUserByEmail(email);
       if (user && user?.is_admin) {
-        ctx.response.body = { ok: true, user };
+        const token = await jwt.sign(
+          { email, is_admin: true, id: user.id },
+          "30d",
+        );
+        ctx.response.body = { user, token };
       }
+    } else {
+      ctx.throw(Status.NotFound);
     }
-    ctx.response.body = { ok: true };
   },
 };
