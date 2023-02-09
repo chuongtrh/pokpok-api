@@ -52,9 +52,9 @@ app.use(async (ctx, next) => {
 app.use(routers.routes());
 app.use(routers.allowedMethods());
 
-// Hello World!
+// Health check
 app.use((ctx) => {
-  ctx.response.body = "Hello World!";
+  ctx.response.body = "Pokpok app running...";
 });
 
 export default app;
