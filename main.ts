@@ -1,4 +1,5 @@
-import "https://deno.land/std@0.175.0/dotenv/load.ts";
+import "./deps.ts";
+
 import config from "./src/shared/config.ts";
 
 import "./src/db/firestore.ts";

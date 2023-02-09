@@ -8,4 +8,7 @@ export default {
     BUY_IN: "buyin",
     CASH_OUT: "cashout",
   },
+  PROVIDERS: {
+    TELEGRAM: "telegram",
+  },
 };

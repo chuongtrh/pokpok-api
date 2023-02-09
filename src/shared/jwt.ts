@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
-import * as jose from "https://deno.land/x/jose@v4.11.4/index.ts";
 import config from "./config.ts";
+import { jose } from "../../deps.ts";
 
 const jwtSecret = new TextEncoder().encode(config.JWT_SECRET);
 

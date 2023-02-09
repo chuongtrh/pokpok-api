@@ -1,4 +1,6 @@
 
+@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNodW9uZ3RyaEBnbWFpbC5jb20iLCJpc19hZG1pbiI6dHJ1ZSwiaWQiOiJ1TTR2N3VzZHFCZmhqTW1tbERCUSIsImlzcyI6InBva3BvayIsImV4cCI6MTY3ODUzMDU3MH0.yIBfxhPZJ4IB3eQ60DDA4spX5PpSs6qgu2sHj2eQ6VA
+
 ### Create game
 
 POSt http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game
@@ -32,6 +34,7 @@ GET http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game/b1GGQH4U37dXTJykzl1
 
 ### get players in game
 GET  http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game/b1GGQH4U37dXTJykzl1U/player
+Authorization: Bearer {{token}}
 
 ###
 POST  http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game/b1GGQH4U37dXTJykzl1U/player
@@ -54,11 +57,13 @@ Content-Type: application/json
 
 ### start game
 PUT http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game/b1GGQH4U37dXTJykzl1U/start
+Authorization: Bearer {{token}}
 
 
 
 ### end game
 PUT http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/game/b1GGQH4U37dXTJykzl1U/end
+Authorization: Bearer {{token}}
 
 
 ### action

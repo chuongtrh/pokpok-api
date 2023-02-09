@@ -3,7 +3,8 @@ import { AddPlayerDTO, CreateGameDTO } from "../dto/game.dto.ts";
 import repository from "../repositories/index.ts";
 import constants from "../shared/constants.ts";
 import utils from "../shared/utils.ts";
-
+import pushNotiService from "../services/push-noti.service.ts";
+import { Status } from "../../deps.ts";
 export default {
   getClans: async (ctx: any) => {
     const clains = await repository.clan.getClans();
@@ -120,20 +121,48 @@ export default {
   },
   startGame: async (ctx: any) => {
     const { id: clan_id, game_id } = ctx.params;
+
+    console.log("xxx", Status.Accepted);
+
+    const [clan, game] = await Promise.all([
+      repository.clan.getClan(clan_id),
+      repository.clan.getGame(clan_id, game_id),
+    ]);
+
+    if (game.status !== constants.GAME_STATUS.NEW) {
+      ctx.throw(Status.BadRequest);
+      return;
+    }
+
     await repository.clan.updateGame(clan_id, game_id, {
       status: constants.GAME_STATUS.START,
       start_at: utils.fireStoreTimestamp(new Date()),
     });
+
+    pushNotiService.gameStart({ clan, game });
+
     ctx.response.body = { game_id };
   },
 
   endGame: async (ctx: any) => {
     const { id: clan_id, game_id } = ctx.params;
 
+    const [clan, game] = await Promise.all([
+      repository.clan.getClan(clan_id),
+      repository.clan.getGame(clan_id, game_id),
+    ]);
+
+    if (game.status !== constants.GAME_STATUS.START) {
+      ctx.throw(Status.BadRequest);
+      return;
+    }
+
     await repository.clan.updateGame(clan_id, game_id, {
       status: constants.GAME_STATUS.END,
       end_at: utils.fireStoreTimestamp(new Date()),
     });
+
+    pushNotiService.gameEnd({ clan, game });
 
     ctx.response.body = { game_id };
   },
@@ -141,8 +170,15 @@ export default {
   actionGame: async (ctx: any) => {
     const { id: clan_id, game_id } = ctx.params;
 
-    const game = await repository.clan.getGame(clan_id, game_id);
-    if (game.status !== constants.GAME_STATUS.START) return;
+    const [clan, game] = await Promise.all([
+      repository.clan.getClan(clan_id),
+      repository.clan.getGame(clan_id, game_id),
+    ]);
+
+    if (game.status !== constants.GAME_STATUS.START) {
+      ctx.throw(Status.BadRequest);
+      return;
+    }
 
     const { player_id, value, action } = await ctx.request.body({
       type: "json",
@@ -173,6 +209,8 @@ export default {
       value,
       created_at: utils.fireStoreTimestamp(new Date()),
     });
+
+    pushNotiService.gameLog({ clan, game, action, value, player });
 
     ctx.response.body = {};
   },

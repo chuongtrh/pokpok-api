@@ -1,3 +1,4 @@
+// deno-lint-ignore-file
 export const Timing = async (ctx: any, next: () => Promise<unknown>) => {
   const start = Date.now();
   await next();

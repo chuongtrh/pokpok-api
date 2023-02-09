@@ -1,6 +1,7 @@
 // deno-lint-ignore-file
-import { Status } from "https://deno.land/x/oak@v11.1.0/mod.ts";
+import { Status } from "../../deps.ts";
 import jwt from "../shared/jwt.ts";
+
 export const AdminAuthenticated = (ignorePath: [string]) => {
   const routerMiddleware = async (ctx: any, next: () => Promise<unknown>) => {
     const method = ctx.request.method;

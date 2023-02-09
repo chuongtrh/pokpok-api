@@ -1,5 +1,7 @@
 import "https://deno.land/std@0.175.0/dotenv/load.ts";
 import config from "../src/shared/config.ts";
+import telegram from "../src/shared/telegram.ts";
+
 console.log("🚀 ~ config", config);
 
 import jwt from "../src/shared/jwt.ts";
@@ -14,3 +16,9 @@ console.log("🚀 ~ token", token);
 
 const payload = await jwt.verify(token);
 console.log("🚀 ~ payload", payload);
+
+telegram.sendMessage(
+  "bot6293048331:AAH3NtDYfBxmAgAyonBRdX49x7rFCdKKm9k",
+  "-851719353",
+  "test message",
+);

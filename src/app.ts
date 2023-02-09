@@ -1,11 +1,7 @@
-import {
-  Application,
-  isHttpError,
-  Status,
-} from "https://deno.land/x/oak@v11.1.0/mod.ts";
-import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
-import { gzip } from "https://deno.land/x/oak_compress@v0.0.2/mod.ts";
+import { Application, gzip, isHttpError, oakCors } from "../deps.ts";
+
 import routers from "./routes/index.ts";
+
 import { Logger } from "./middleware/logger.middleware.ts";
 import { Timing } from "./middleware/timing.middleware.ts";
 

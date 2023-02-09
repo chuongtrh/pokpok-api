@@ -1,5 +1,5 @@
 // deno-lint-ignore-file
-import { Status } from "https://deno.land/x/oak@v11.1.0/mod.ts";
+import { Status } from "../../deps.ts";
 
 import repository from "../repositories/index.ts";
 

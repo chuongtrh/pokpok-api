@@ -1,5 +1,4 @@
 // deno-lint-ignore-file
-
 import {
   addDoc,
   collection,
@@ -17,7 +16,6 @@ import collectionType from "./collection.type.ts";
 export default {
   createClan: async (data: any) => {
     const docRef = await addDoc(collection(db, collectionType.CLANS), data);
-    console.log("createClan:", docRef.id);
     return docRef.id;
   },
   getClans: async () => {
@@ -28,7 +26,6 @@ export default {
         id: doc.id,
       };
     });
-    console.log("🚀 ~ clans", clans);
     return clans;
   },
   getClan: async (clanId: string) => {
@@ -41,7 +38,6 @@ export default {
   addMember: async (clanId: string, data: any) => {
     const ref = doc(db, collectionType.CLANS, clanId);
     const docRef = await addDoc(collection(ref, collectionType.MEMBERS), data);
-    console.log("addMember:", docRef.id);
     return docRef.id;
   },
   getMembers: async (clanId: string) => {
@@ -53,7 +49,6 @@ export default {
         id: doc.id,
       };
     });
-    console.log("🚀 ~ members", members);
     return members;
   },
   getGames: async (clanId: string) => {
@@ -65,7 +60,6 @@ export default {
         id: doc.id,
       };
     });
-    console.log("🚀 ~ games", games);
     return games;
   },
   getGame: async (clanId: string, gameId: string) => {
@@ -80,7 +74,6 @@ export default {
   addGame: async (clanId: string, data: any) => {
     const ref = doc(db, collectionType.CLANS, clanId);
     const docRef = await addDoc(collection(ref, collectionType.GAMES), data);
-    console.log("addGame:", docRef.id);
     return docRef.id;
   },
   updateGame: async (clanId: string, gameId: string, data: any) => {
@@ -103,7 +96,6 @@ export default {
         id: snap.id,
       };
     });
-    console.log("🚀 ~ players", players);
     return players;
   },
   getPlayer: async (clanId: string, gameId: string, playerId: string) => {
@@ -136,7 +128,6 @@ export default {
         data,
         { merge: true },
       );
-      console.log("addPlayer:", playerId);
     }
     return playerId;
   },
@@ -156,7 +147,6 @@ export default {
     const gameRef = doc(ref, collectionType.GAMES, gameId);
 
     const docRef = await addDoc(collection(gameRef, collectionType.LOGS), data);
-    console.log("addLogIntoGame:", docRef.id);
     return docRef.id;
   },
   getLogs: async (clanId: string, gameId: string) => {
@@ -171,7 +161,6 @@ export default {
         id: doc.id,
       };
     });
-    console.log("🚀 ~ logs", logs);
     return logs;
   },
 };
