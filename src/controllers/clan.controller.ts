@@ -143,9 +143,10 @@ export default {
   endGame: async (ctx: any) => {
     const { id: clan_id, game_id } = ctx.params;
 
-    const [clan, game] = await Promise.all([
+    const [clan, game, players] = await Promise.all([
       repository.clan.getClan(clan_id),
       repository.clan.getGame(clan_id, game_id),
+      repository.clan.getPlayers(clan_id, game_id),
     ]);
 
     if (game.status !== constants.GAME_STATUS.START) {
@@ -164,6 +165,7 @@ export default {
         ...game,
         end_at: utils.fireStoreTimestamp(new Date()),
       },
+      players,
     });
 
     ctx.response.body = { game_id };
