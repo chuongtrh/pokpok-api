@@ -2,7 +2,7 @@ const MAX_MSG_TXT_LEN = 4096;
 
 async function _send(bot_id: string, chat_id: string, message: string) {
   const url =
-    `https://api.telegram.org/${bot_id}/sendMessage?chat_id=${chat_id}&parse_mode=html&text=${
+    `https://api.telegram.org/${bot_id}/sendMessage?chat_id=${chat_id}&parse_mode=html&disable_web_page_preview=true&text=${
       encodeURIComponent(
         message,
       )

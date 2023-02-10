@@ -103,8 +103,6 @@ export default {
       .value;
 
     if (players.length > 0) {
-      console.log("🚀 ~ players", players);
-
       await Promise.all(
         players.map((player) =>
           repository.clan.addPlayer(clan_id, game_id, player.id, {
@@ -121,8 +119,6 @@ export default {
   },
   startGame: async (ctx: any) => {
     const { id: clan_id, game_id } = ctx.params;
-
-    console.log("xxx", Status.Accepted);
 
     const [clan, game] = await Promise.all([
       repository.clan.getClan(clan_id),
@@ -162,7 +158,13 @@ export default {
       end_at: utils.fireStoreTimestamp(new Date()),
     });
 
-    pushNotiService.gameEnd({ clan, game });
+    pushNotiService.gameEnd({
+      clan,
+      game: {
+        ...game,
+        end_at: utils.fireStoreTimestamp(new Date()),
+      },
+    });
 
     ctx.response.body = { game_id };
   },

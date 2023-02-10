@@ -17,8 +17,13 @@ console.log("🚀 ~ token", token);
 const payload = await jwt.verify(token);
 console.log("🚀 ~ payload", payload);
 
-telegram.sendMessage(
-  "bot6293048331:AAH3NtDYfBxmAgAyonBRdX49x7rFCdKKm9k",
-  "-851719353",
-  "test message",
+// telegram.sendMessage(
+//   "bot6293048331:AAH3NtDYfBxmAgAyonBRdX49x7rFCdKKm9k",
+//   "-851719353",
+//   `<a href="https://stackoverflow.com/">Link</a>`,
+// );
+
+const min = Math.round(
+  (1000 - 20) / 60,
 );
+console.log("🚀 ~ min", min);

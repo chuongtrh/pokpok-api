@@ -5,6 +5,8 @@ import constants from "../shared/constants.ts";
 import dayjs from "https://deno.land/x/deno_dayjs@v0.2.2/mod.ts";
 
 const _pushMessage = (message: string, options: any = {}) => {
+  console.info("🚀 ~ _pushMessage", message);
+
   try {
     switch (options?.provider) {
       case constants.PROVIDERS.TELEGRAM: {
@@ -30,11 +32,14 @@ const _pushMessage = (message: string, options: any = {}) => {
 export default {
   gameStart({ clan, game }: any) {
     const { settings } = clan;
+    const link = `${config.WEB_APP_URL}/game/${game?.id}?clan_id=${clan?.id}`;
     const message = `
 ============
 🎯 GAME: <b>${game?.name}</b>
 🛡️ CLAN: ${clan?.name}
-🏁 Start: ${dayjs().format("YYYY-MM-DD HH:mm")}`;
+🏁 Start: ${dayjs().format("YYYY-MM-DD HH:mm")}
+🔗 <a href="${link}">Link</a>
+`;
 
     _pushMessage(message, {
       provider: constants.PROVIDERS.TELEGRAM,
@@ -43,11 +48,20 @@ export default {
   },
   gameEnd({ clan, game }: any) {
     const { settings } = clan;
+    const link = `${config.WEB_APP_URL}/game/${game?.id}?clan_id=${clan?.id}`;
+
     const message = `
 ============
 🎯 GAME: <b>${game?.name}</b>
 🛡️ CLAN: ${clan?.name}
-🔚 End: ${dayjs().format("YYYY-MM-DD HH:mm")}`;
+🔚 End: ${dayjs().format("YYYY-MM-DD HH:mm")}
+⏰ Duration: ${
+      Math.round(
+        (game?.end_at?.seconds - game?.start_at?.seconds) / 60,
+      )
+    } mins
+🔗 <a href="${link}">Link</a>
+`;
 
     _pushMessage(message, {
       provider: constants.PROVIDERS.TELEGRAM,

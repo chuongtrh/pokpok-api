@@ -5,4 +5,5 @@ export default {
   PLAYERS: "players",
   LOGS: "logs",
   USERS: "users",
+  EVENT_LOGS: "event-logs",
 };
