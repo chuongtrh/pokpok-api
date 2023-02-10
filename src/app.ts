@@ -10,8 +10,8 @@ const app = new Application();
 app.use(gzip());
 app.use(oakCors());
 
-app.use(Timing);
 app.use(Logger);
+app.use(Timing);
 
 app.use(async (ctx, next) => {
   try {
