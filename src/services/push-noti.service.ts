@@ -32,7 +32,7 @@ const _pushMessage = (message: string, options: any = {}) => {
 export default {
   gameStart({ clan, game }: any) {
     const { settings } = clan;
-    const link = `${config.WEB_APP_URL}/game/${game?.id}?clan_id=${clan?.id}`;
+    const link = `${config.WEB_APP_URL}/game/${game?.id}/?clan_id=${clan?.id}`;
     const message = `
 ============
 🎯 GAME: <b>${game?.name}</b>
@@ -48,7 +48,7 @@ export default {
   },
   gameEnd({ clan, game }: any) {
     const { settings } = clan;
-    const link = `${config.WEB_APP_URL}/game/${game?.id}?clan_id=${clan?.id}`;
+    const link = `${config.WEB_APP_URL}/game/${game?.id}/?clan_id=${clan?.id}`;
 
     const message = `
 ============
