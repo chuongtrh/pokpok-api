@@ -109,6 +109,7 @@ export default {
             id: player.id,
             name: player.name,
             profit: 0,
+            profit_chip: 0,
             total_buyin: 0,
             total_cashout: 0,
           })
@@ -159,6 +160,16 @@ export default {
       end_at: utils.fireStoreTimestamp(new Date()),
     });
 
+    await Promise.all(
+      players.map((p) =>
+        repository.clan.updatePlayer(clan_id, game_id, p.id, {
+          ...p,
+          profit_chip: p.total_cashout - p.total_buyin,
+          profit: (p.total_cashout - p.total_buyin) * game.rate / game.stack,
+        })
+      ),
+    );
+
     pushNotiService.gameEnd({
       clan,
       game: {
@@ -194,12 +205,14 @@ export default {
     switch (action) {
       case constants.GAME_ACTIONS.BUY_IN: {
         await repository.clan.updatePlayer(clan_id, game_id, player_id, {
+          status: "in",
           total_buyin: utils.fireStoreIncrement(value * game.stack),
         });
         break;
       }
       case constants.GAME_ACTIONS.CASH_OUT: {
         await repository.clan.updatePlayer(clan_id, game_id, player_id, {
+          status: "out",
           total_cashout: utils.fireStoreIncrement(value),
         });
         break;
@@ -222,5 +235,10 @@ export default {
     const { id: clan_id, game_id } = ctx.params;
     const logs = await repository.clan.getLogs(clan_id, game_id);
     ctx.response.body = logs;
+  },
+  getSummary: async (ctx: any) => {
+    const { id: clan_id } = ctx.params;
+    const summary = await repository.clan.getSummaryClan(clan_id);
+    ctx.response.body = summary;
   },
 };

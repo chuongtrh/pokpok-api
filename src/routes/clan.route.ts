@@ -10,6 +10,7 @@ clanRouter.get("/:id", clanController.getClan);
 
 clanRouter.post("/:id/member", clanController.addMember);
 clanRouter.get("/:id/member", clanController.getMembers);
+clanRouter.get("/:id/summary", clanController.getSummary);
 
 clanRouter.get("/:id/game", clanController.getGames);
 clanRouter.get("/:id/game/:game_id", clanController.getGame);

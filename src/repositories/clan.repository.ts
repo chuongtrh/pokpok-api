@@ -8,10 +8,39 @@ import {
   orderBy,
   query,
   setDoc,
+  where,
 } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 import db from "../db/firestore.ts";
 import collectionType from "./collection.type.ts";
+
+const getPlayers = async (clanId: string, gameId: string) => {
+  const ref = doc(db, collectionType.CLANS, clanId);
+  const gameRef = doc(ref, collectionType.GAMES, gameId);
+  const playerRef = await getDocs(
+    collection(gameRef, collectionType.PLAYERS),
+  );
+  const players = playerRef.docs.map((snap) => {
+    const snapData = snap.data();
+    return {
+      ...snapData,
+      id: snap.id,
+    };
+  });
+  return players;
+};
+
+const getMembers = async (clanId: string) => {
+  const ref = doc(db, collectionType.CLANS, clanId);
+  const memberRef = await getDocs(collection(ref, collectionType.MEMBERS));
+  const members = memberRef.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id,
+    };
+  });
+  return members;
+};
 
 export default {
   createClan: async (data: any) => {
@@ -40,17 +69,7 @@ export default {
     const docRef = await addDoc(collection(ref, collectionType.MEMBERS), data);
     return docRef.id;
   },
-  getMembers: async (clanId: string) => {
-    const ref = doc(db, collectionType.CLANS, clanId);
-    const memberRef = await getDocs(collection(ref, collectionType.MEMBERS));
-    const members = memberRef.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        id: doc.id,
-      };
-    });
-    return members;
-  },
+  getMembers,
   getGames: async (clanId: string) => {
     const ref = doc(db, collectionType.CLANS, clanId);
     const gameRef = await getDocs(collection(ref, collectionType.GAMES));
@@ -81,23 +100,7 @@ export default {
     const gameRef = doc(ref, collectionType.GAMES, gameId);
     await setDoc(gameRef, data, { merge: true });
   },
-  getPlayers: async (clanId: string, gameId: string) => {
-    const ref = doc(db, collectionType.CLANS, clanId);
-    const gameRef = doc(ref, collectionType.GAMES, gameId);
-
-    const playerRef = await getDocs(
-      collection(gameRef, collectionType.PLAYERS),
-    );
-    const players = playerRef.docs.map((snap) => {
-      const snapData = snap.data();
-      return {
-        ...snapData,
-        profit: snapData.total_cashout - snapData.total_buyin,
-        id: snap.id,
-      };
-    });
-    return players;
-  },
+  getPlayers,
   getPlayer: async (clanId: string, gameId: string, playerId: string) => {
     const ref = doc(db, collectionType.CLANS, clanId);
     const gameRef = doc(ref, collectionType.GAMES, gameId);
@@ -106,7 +109,6 @@ export default {
     const snapData = snap.data();
     return {
       ...snapData,
-      profit: snapData.total_cashout - snapData.total_buyin,
       id: playerId,
     };
   },
@@ -162,5 +164,37 @@ export default {
       };
     });
     return logs;
+  },
+  getSummaryClan: async (clanId: string) => {
+    const ref = doc(db, collectionType.CLANS, clanId);
+    const gameRef = collection(ref, collectionType.GAMES);
+    const q = query(
+      gameRef,
+      where("status", "==", "end"),
+      orderBy("end_at"),
+    );
+    const [snaps, members] = await Promise.all([
+      getDocs(q),
+      getMembers(clanId),
+    ]);
+    const games = snaps.docs.map((doc) => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      };
+    });
+
+    const game_players = new Map();
+    await Promise.all(games.map(async (g) => {
+      let players = await getPlayers(clanId, g.id);
+      game_players.set(g.id, players);
+    }));
+
+    return {
+      id: clanId,
+      members,
+      games,
+      game_players: Object.fromEntries(game_players),
+    };
   },
 };

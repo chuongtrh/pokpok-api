@@ -33,3 +33,9 @@ Content-Type: application/json
     "code":"aaa",
     "name":"aaa"
 }
+
+
+
+### summary
+GET http://localhost:5200/api/clan/4sFoft7LOJP2geTPJLnN/summary
+
