@@ -23,7 +23,9 @@ console.log("🚀 ~ payload", payload);
 //   `<a href="https://stackoverflow.com/">Link</a>`,
 // );
 
-const min = Math.round(
-  (1000 - 20) / 60,
-);
-console.log("🚀 ~ min", min);
+// const min = Math.round(
+//   (1000 - 20) / 60,
+// );
+// console.log("🚀 ~ min", min);
+
+console.log("🚀 ~ min", parseInt("2,500"));

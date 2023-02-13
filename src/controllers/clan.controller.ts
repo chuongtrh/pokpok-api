@@ -207,6 +207,11 @@ export default {
         await repository.clan.updatePlayer(clan_id, game_id, player_id, {
           status: "in",
           total_buyin: utils.fireStoreIncrement(value * game.stack),
+          profit_chip: player.total_cashout -
+            (player.total_buyin + value * game.stack),
+          profit:
+            (player.total_cashout - player.total_buyin + value * game.stack) *
+            game.rate / game.stack,
         });
         break;
       }
@@ -214,6 +219,9 @@ export default {
         await repository.clan.updatePlayer(clan_id, game_id, player_id, {
           status: "out",
           total_cashout: utils.fireStoreIncrement(value),
+          profit_chip: player.total_cashout + value - player.total_buyin,
+          profit: (player.total_cashout + value - player.total_buyin) *
+            game.rate / game.stack,
         });
         break;
       }
