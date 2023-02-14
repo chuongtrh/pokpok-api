@@ -70,6 +70,9 @@ export default {
       name,
       type,
       status: constants.GAME_STATUS.NEW,
+      balance_chip: 0,
+      total_buyin_chip: 0,
+      total_cashout_chip: 0,
       created_at: utils.fireStoreTimestamp(new Date()),
     });
 
@@ -155,20 +158,30 @@ export default {
       return;
     }
 
+    let balanceChip = 0;
+    let totalBuyinChip = 0;
+    let totalCashoutChip = 0;
+    await Promise.all(
+      players.map((p) => {
+        const profit_chip = p.total_cashout - p.total_buyin;
+        balanceChip += profit_chip;
+        totalBuyinChip += p.total_buyin;
+        totalCashoutChip += p.total_cashout;
+        return repository.clan.updatePlayer(clan_id, game_id, p.id, {
+          ...p,
+          profit_chip: profit_chip,
+          profit: (profit_chip) * game.rate / game.stack,
+        });
+      }),
+    );
+
     await repository.clan.updateGame(clan_id, game_id, {
       status: constants.GAME_STATUS.END,
+      balance_chip: balanceChip,
+      total_buyin_chip: totalBuyinChip,
+      total_cashout_chip: totalCashoutChip,
       end_at: utils.fireStoreTimestamp(new Date()),
     });
-
-    await Promise.all(
-      players.map((p) =>
-        repository.clan.updatePlayer(clan_id, game_id, p.id, {
-          ...p,
-          profit_chip: p.total_cashout - p.total_buyin,
-          profit: (p.total_cashout - p.total_buyin) * game.rate / game.stack,
-        })
-      ),
-    );
 
     pushNotiService.gameEnd({
       clan,

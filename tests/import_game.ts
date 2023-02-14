@@ -35,7 +35,7 @@ async function ImportMember() {
   }
 }
 
-await ImportMember();
+// await ImportMember();
 
 const members = await repository.clan.getMembers(clanId);
 const memberMapping: any = {};
@@ -85,7 +85,8 @@ async function actionGame(
   });
 }
 //Import game in Clan
-for await (const game of dataImport) {
+for (let i = 0; i < dataImport.length; i++) {
+  const game = dataImport[i];
   const { name, date, session, players } = game;
 
   //1. Create game
@@ -96,8 +97,9 @@ for await (const game of dataImport) {
     type: "texas_holdem",
     status: constants.GAME_STATUS.START,
     created_at: utils.fireStoreTimestamp(new Date(date)),
+    start_at: utils.fireStoreTimestamp(new Date(date)),
   });
-  console.log("🚀 ~ start gameId", gameId);
+  console.log(`🚀 ~ start ${i} gameId`, gameId);
 
   //2. Setup player
   for await (const player of players) {
@@ -147,23 +149,34 @@ for await (const game of dataImport) {
   }
 
   //3. End game
-  await repository.clan.updateGame(clanId, gameId, {
-    status: constants.GAME_STATUS.END,
-    end_at: utils.fireStoreTimestamp(new Date(date)),
-  });
-  console.log("🚀 ~ end gameId", gameId);
 
+  let balanceChip = 0;
+  let totalBuyinChip = 0;
+  let totalCashoutChip = 0;
   const playerInGame = await repository.clan.getPlayers(clanId, gameId);
   await Promise.all(
-    playerInGame.map((p) =>
-      repository.clan.updatePlayer(clanId, gameId, p.id, {
+    playerInGame.map((p) => {
+      const profit_chip = p.total_cashout - p.total_buyin;
+      balanceChip += profit_chip;
+      totalBuyinChip += p.total_buyin;
+      totalCashoutChip += p.total_cashout;
+      return repository.clan.updatePlayer(clanId, gameId, p.id, {
         ...p,
-        profit_chip: p.total_cashout - p.total_buyin,
-        profit: (p.total_cashout - p.total_buyin) * RATE / STACK,
-      })
-    ),
+        profit_chip: profit_chip,
+        profit: (profit_chip) * RATE / STACK,
+      });
+    }),
   );
-  console.log("🚀 ~ Done gameId", gameId);
+  console.log("🚀 ~ end gameId", gameId);
+
+  await repository.clan.updateGame(clanId, gameId, {
+    status: constants.GAME_STATUS.END,
+    balance_chip: balanceChip,
+    total_buyin_chip: totalBuyinChip,
+    total_cashout_chip: totalCashoutChip,
+    end_at: utils.fireStoreTimestamp(new Date(date)),
+  });
+  console.log(`🚀 ~ Done ${i} gameId`, gameId);
 }
 
 console.log(`🚀 ~ DONE ${dataImport.length} games`);
