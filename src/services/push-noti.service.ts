@@ -56,6 +56,9 @@ export default {
     const link =
       `${config.WEB_APP_URL}/game/?clan_id=${clan?.id}&game_id=${game?.id}`;
 
+    const linkDashboard =
+      `${config.WEB_APP_URL}/clan/dashboard/?clan_id=${clan?.id}`;
+
     let totalBuyin = 0;
     let totalCashout = 0;
     players = players.map((p: any) => {
@@ -79,6 +82,7 @@ export default {
       )
     } mins
 🔗 <a href="${link}">Link</a>
+📊 <a href="${linkDashboard}">Link dashboard</a>
 
 💵 Buyin: ${totalBuyin}
 🏃‍♂️ Cashout: ${totalCashout}
