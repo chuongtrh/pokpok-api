@@ -37,4 +37,7 @@ export default {
     str = str.trim();
     return str;
   },
+  formatMoney: (amount: number, currency: string = "USD") => {
+    return amount?.toLocaleString("en-US", { style: "currency", currency });
+  },
 };

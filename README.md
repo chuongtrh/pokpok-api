@@ -4,6 +4,10 @@ Check out repo:
 - Backend https://github.com/chuongtrh/pokpok-api
 - Web app https://github.com/chuongtrh/pokpok-app
 
+## Installation
+
+ - deno 1.30.0
+
 ## Getting Started
 
 First, setup file **.env** from *.env.example*

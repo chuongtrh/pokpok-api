@@ -3,10 +3,10 @@ import telegram from "../shared/telegram.ts";
 import config from "../shared/config.ts";
 import constants from "../shared/constants.ts";
 import dayjs from "https://deno.land/x/deno_dayjs@v0.2.2/mod.ts";
+import utils from "../shared/utils.ts";
 
 const _pushMessage = (message: string, options: any = {}) => {
   console.info("🚀 ~ _pushMessage", message);
-
   try {
     switch (options?.provider) {
       case constants.PROVIDERS.TELEGRAM: {
@@ -38,7 +38,6 @@ export default {
     const message = `
 ============
 🎯 GAME: <b>${game?.name}</b>
-🛡️ CLAN: ${clan?.name}
 🏁 Start: ${dayjs().format("YYYY-MM-DD HH:mm")}
 ♥️  Type: ${game?.type}
 🥞 Stack: ${game?.stack}
@@ -74,7 +73,6 @@ export default {
     const message = `
 ============
 🎯 GAME: <b>${game?.name}</b>
-🛡️ CLAN: ${clan?.name}
 🔚 End: ${dayjs().format("YYYY-MM-DD HH:mm")}
 ⏰ Duration: ${
       Math.round(
@@ -90,7 +88,9 @@ export default {
 🃏 Players:
 ${
       players?.map((p: any) => {
-        return `• <b>${p.name}</b> buyin ${p.stack} cashout ${p.total_cashout}`;
+        return `• <b>${p.name}</b> ${p.stack} stack, in ${p.total_buyin} - out ${p.total_cashout} = ${p.profit_chip} (<b>${
+          utils.formatMoney(p.profit, settings?.currency)
+        }</b>)`;
       }).join("\n")
     }
 `;
@@ -105,8 +105,8 @@ ${
 
     let message = `
 ============
-🎯 GAME: <b>${game?.name}</b>
-🛡️ CLAN: ${clan?.name}`;
+🎯 GAME: <b>${game?.name}</b>`;
+
     if (action == constants.GAME_ACTIONS.BUY_IN) {
       message = `${message}
 💵 <b>${player?.name}</b> buy-in <b>${value}</b> stack`;
