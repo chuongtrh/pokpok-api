@@ -46,8 +46,10 @@ export default {
 
   getGames: async (ctx: any) => {
     const { id } = ctx.params;
-    const game = await repository.clan.getGames(id);
-    ctx.response.body = game;
+    const games = await repository.clan.getGames(id);
+    ctx.response.body = games.sort((a, b) =>
+      b.created_at.seconds - a.created_at.seconds
+    );
   },
 
   getGame: async (ctx: any) => {
