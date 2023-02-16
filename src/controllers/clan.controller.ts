@@ -7,7 +7,13 @@ import pushNotiService from "../services/push-noti.service.ts";
 import { Status } from "../../deps.ts";
 export default {
   getClans: async (ctx: any) => {
-    const clains = await repository.clan.getClans();
+    const { id } = ctx.state.user || {};
+
+    let is_private = false;
+    if (id) {
+      is_private = true;
+    }
+    const clains = await repository.clan.getClans(is_private);
     ctx.response.body = clains;
   },
 
