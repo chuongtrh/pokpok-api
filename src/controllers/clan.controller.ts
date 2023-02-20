@@ -81,6 +81,7 @@ export default {
       balance_chip: 0,
       total_buyin_chip: 0,
       total_cashout_chip: 0,
+      total_money_in: 0,
       created_at: utils.fireStoreTimestamp(new Date()),
     });
 
@@ -169,16 +170,22 @@ export default {
     let balanceChip = 0;
     let totalBuyinChip = 0;
     let totalCashoutChip = 0;
+    let totalMoneyIn = 0;
     await Promise.all(
       players.map((p) => {
         const profit_chip = p.total_cashout - p.total_buyin;
+        const profit = (profit_chip) * game.rate / game.stack;
+        if (profit > 0) {
+          totalMoneyIn += profit;
+        }
+
         balanceChip += profit_chip;
         totalBuyinChip += p.total_buyin;
         totalCashoutChip += p.total_cashout;
         return repository.clan.updatePlayer(clan_id, game_id, p.id, {
           ...p,
           profit_chip: profit_chip,
-          profit: (profit_chip) * game.rate / game.stack,
+          profit: profit,
         });
       }),
     );
@@ -188,6 +195,7 @@ export default {
       balance_chip: balanceChip,
       total_buyin_chip: totalBuyinChip,
       total_cashout_chip: totalCashoutChip,
+      total_money_in: totalMoneyIn,
       end_at: utils.fireStoreTimestamp(new Date()),
     });
 
@@ -231,7 +239,7 @@ export default {
           profit_chip: player.total_cashout -
             (player.total_buyin + value * game.stack),
           profit:
-            (player.total_cashout - player.total_buyin + value * game.stack) *
+            (player.total_cashout - (player.total_buyin + value * game.stack)) *
             game.rate / game.stack,
         });
         break;
@@ -241,7 +249,7 @@ export default {
           status: "out",
           total_cashout: utils.fireStoreIncrement(value),
           profit_chip: player.total_cashout + value - player.total_buyin,
-          profit: (player.total_cashout + value - player.total_buyin) *
+          profit: (player.total_cashout + (value - player.total_buyin)) *
             game.rate / game.stack,
         });
         break;
