@@ -10,10 +10,15 @@ export default {
     const { id } = ctx.state.user || {};
 
     let is_private = false;
+    let supportClans = [];
     if (id) {
+      const user = await repository.user.getById(id);
+      if (user) {
+        supportClans = user.support_clans;
+      }
       is_private = true;
     }
-    const clains = await repository.clan.getClans(is_private);
+    const clains = await repository.clan.getClans(is_private, supportClans);
     ctx.response.body = clains;
   },
 

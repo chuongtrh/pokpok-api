@@ -47,11 +47,14 @@ export default {
     const docRef = await addDoc(collection(db, collectionType.CLANS), data);
     return docRef.id;
   },
-  getClans: async (is_private: boolean = false) => {
+  getClans: async (is_private: boolean = false, clan_ids: string[]) => {
     const clanRef = collection(db, collectionType.CLANS);
     let q;
     if (is_private == true) {
-      q = query(clanRef, orderBy("created_at"));
+      q = query(
+        clanRef,
+        orderBy("created_at"),
+      );
     } else {
       q = query(
         clanRef,
@@ -67,6 +70,11 @@ export default {
       };
     });
 
+    if (is_private == true) {
+      return clans.filter((c) => {
+        return c.is_private == false || clan_ids.includes(c.id);
+      });
+    }
     return clans;
   },
   getClan: async (clanId: string) => {

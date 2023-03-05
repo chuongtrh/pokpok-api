@@ -1,5 +1,7 @@
 import {
   collection,
+  doc,
+  getDoc,
   getDocs,
   limit,
   query,
@@ -22,5 +24,12 @@ export default {
       };
     }
     return null;
+  },
+  getById: async (id: string) => {
+    const snap = await getDoc(doc(db, collectionType.USERS, id));
+    return {
+      ...snap.data(),
+      id,
+    };
   },
 };
