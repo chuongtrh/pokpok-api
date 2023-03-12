@@ -5,9 +5,9 @@ Check out repo:
 - Web app https://github.com/chuongtrh/pokpok-app
 
 Stacks:
-Web: Next.js, Charka-ui, PWA
-API: oak + denojs
-DB: firestore
+- Web: Next.js, Charka-ui, PWA
+- API: oak + denojs
+- DB: firestore
 
 ## Installation
 
