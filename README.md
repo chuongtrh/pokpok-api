@@ -4,6 +4,11 @@ Check out repo:
 - Backend https://github.com/chuongtrh/pokpok-api
 - Web app https://github.com/chuongtrh/pokpok-app
 
+Stacks:
+Web: Next.js, Charka-ui, PWA
+API: oak + denojs
+DB: firestore
+
 ## Installation
 
  - deno 1.30.0
